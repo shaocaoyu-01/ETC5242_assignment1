@@ -1,0 +1,8 @@
+"0","library(ggplot2)"
+"0","P1 <- ggplot(df1_tidy,aes(x=year,y=tfr,color= country))+"
+"0","  geom_line(linewidth =1)+"
+"0","labs(title = ""Total Fertility Rate of Australia & Japan(1900-2020)"", x= NULL, y=""Children per woman"")+"
+"0","  theme_minimal(base_size = 12)"
+"0",""
+"0","P1"
+"0",""
