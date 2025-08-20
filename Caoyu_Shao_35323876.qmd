@@ -1,0 +1,48 @@
+---
+title: "assignment1"
+format: html
+editor: visual
+execute:
+   echo: false
+   warning: false
+   message: false
+---
+
+```{r}
+df <- read.csv("children_per_woman_total_fertility.csv")
+```
+
+The data isn't in a tidy format, because this data is a wide format :there is one row per country and one column per year(X1900,X1901). The definition of tidy data is that one observation per row , one variable per column, one value per cell. To make it a tidy data, we should remain three columns one is country, one is year and the last one is tfr.
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+df1 <- df |> 
+     filter(country %in% c("Australia","Japan")) |>
+    select(country, X1900:X2020)
+
+
+df1_tidy <- df1 |> 
+  pivot_longer(
+    cols = - country,     
+    names_to = "year",
+    values_to = "tfr",
+    names_prefix = "X",             
+    names_transform = list(year = as.integer))
+```
+
+```{r}
+library(ggplot2)
+P1 <- ggplot(df1_tidy,aes(x=year,y=tfr,color= country))+
+  geom_line(linewidth =1)+
+labs(title = "Total Fertility Rate of Australia & Japan(1900-2020)", x= NULL, y="Children per woman")+
+  theme_minimal(base_size = 12)
+
+P1
+
+```
+
+The chart is about the total fertility rate of Australia and Japan.
+
+We can infer from the chart that Japanese total fertility rate has droped steadily from 1900 -2020. From 1900 to 1925, the total fertility rate could be about 5 children per woman. After 1925, the TFR has dropped sharply until 1946. That may possibly be due to the whole nation was involved the WW2. After 1946, the TFR has rebounced back to 4.5 children per woman. But this trend didn't last for a long time, then the TFR dropped sharply.
