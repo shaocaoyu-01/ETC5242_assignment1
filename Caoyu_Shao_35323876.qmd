@@ -1,6 +1,7 @@
 ---
-title: "assignment1"
-format: html
+title: "Assignment1"
+author: Caoyu Shao
+format: pdf
 editor: visual
 execute:
    echo: false
@@ -36,13 +37,67 @@ df1_tidy <- df1 |>
 library(ggplot2)
 P1 <- ggplot(df1_tidy,aes(x=year,y=tfr,color= country))+
   geom_line(linewidth =1)+
-labs(title = "Total Fertility Rate of Australia & Japan(1900-2020)", x= NULL, y="Children per woman")+
+labs(title = "Figure 1.Total Fertility Rate of Australia & Japan(1900-2020)", x= NULL, y="Children per woman")+
   theme_minimal(base_size = 12)
 
 P1
 
 ```
 
-The chart is about the total fertility rate of Australia and Japan.
+Figure 1 is about the total fertility rate of Australia and Japan.
 
-We can infer from the chart that Japanese total fertility rate has droped steadily from 1900 -2020. From 1900 to 1925, the total fertility rate could be about 5 children per woman. After 1925, the TFR has dropped sharply until 1946. That may possibly be due to the whole nation was involved the WW2. After 1946, the TFR has rebounced back to 4.5 children per woman. But this trend didn't last for a long time, then the TFR dropped sharply.
+We can infer from the chart that Japanese total fertility rate has dropped steadily from 1900 -2020. From 1900 to 1925, the total fertility rate could be about 5 children per woman. After 1925, the TFR has dropped sharply until 1946. That may possibly be due to the whole nation was involved the WW2. After 1946, the TFR has rebounced back to 4.5 children per woman, and it is a postwar baby boom. But this trend didn't last for a long time, then the TFR dropped sharply.
+
+Australia‘s TFR is wave-shaped, with obvious periodicity. From 1900 -1936, the TFR has dropped from 3.6 to approximately 2 children. And then increased from 1937 to 1962. After 1962, the TFR has dropped steadily. There is a small upstick after 2000, but it didn't last for a long time.
+
+```{r}
+P2 <- ggplot(df1_tidy,aes(x=year,y=tfr,color= country))+
+  geom_line(linewidth =1)+
+labs(title = "Figure 2.Total Fertility Rate of Australia & Japan(1900-2020)", x= NULL, y="Children per woman")+
+  theme_minimal(base_size = 12) +
+  geom_hline(yintercept = 2.1, linetype = "dashed") +
+  annotate("text", x = 1902, y = 2.1, label = "Replacement ≈ 2.1", vjust = -0.6, hjust = 0, size = 3)
+
+P2
+
+
+```
+
+Both Australia and Japan's TFR have been persistently below replacement rate for long decades. From Figure 2, Japanese TFR has been below replacement rate from 1974, and in Australia, the data is 1976. After 2000, Australia's TFR has rebounced a little, but didn't reach the replacement rate.
+
+```{r}
+set.seed(35323876)
+
+choice <- setdiff(unique(df$country),c("Australia","Japan"))
+
+sample_country <- sample(choice, size =1)
+
+sample_country
+```
+
+My sample country is Russia.
+
+```{r}
+df_tidy <- df |>
+  pivot_longer(cols = -country,
+               names_to = "year",
+               values_to = "TFR",
+               names_prefix = "X")
+library(readr)
+
+df_Russia <- df_tidy |>
+  filter(country =="Russia")|>
+  filter(year %in% 1900:2020) |>
+  mutate(Year = parse_number(as.character(year)))
+
+P3 <- ggplot(df_Russia,aes(x=Year, y=TFR,color =country))+
+    geom_line(linewidth =1,na.rm = TRUE)+
+   labs(title = "Figure 3.Total Fertility Rate of Russia(1900-2020)", x= NULL, y ="Children per woman")+
+   theme_minimal(base_size = 12) +
+   geom_hline(yintercept = 2.1 ,linetype = "dashed") +
+   annotate("text", x=1902, y  =2.1, vjust = -0.6, hjust =0,size =3, label = "Replacement \u2248 2.1")
+ 
+ P3
+```
+
+Russia has a very high TFR initially, which is over 7 children per woman. From 1913 to 1925, fertility rates fluctuate greatly. That is because of World War I (1914–18) and Revolution and Civil War (1917–22), leading to a significant decline in births, followed by a brief “compensatory” recovery after the war eased. And then the TFR decreased a lot until 1940. After 1940, there is a small up stick. And then dropped steadily. After 1988, the TFR dropped below the replacement rate.
